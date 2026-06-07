@@ -2,7 +2,7 @@ use core::ptr::{NonNull, copy, drop_in_place, read, slice_from_raw_parts_mut};
 use core::slice::Iter;
 use core::mem::take;
 use core::slice::from_raw_parts_mut;
-use std::ptr::write;
+use core::ptr::write;
 use crate::vec::{SizedTypeProperties, Vec};
 
 /// A draining iterator over a [`Vec`].

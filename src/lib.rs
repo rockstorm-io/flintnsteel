@@ -1200,7 +1200,7 @@ impl Arena {
     /// # Example
     ///
     /// ```
-    /// use std::alloc::Layout;
+    /// use core::alloc::Layout;
     /// use flintnsteel::Arena;
     ///
     /// #[derive(Debug, Default, PartialEq)]
@@ -1713,8 +1713,8 @@ impl Arena {
     ///
     /// ```
     /// use flintnsteel::Arena;
-    /// use std::alloc::Layout;
-    /// use std::ptr::NonNull;
+    /// use core::alloc::Layout;
+    /// use core::ptr::NonNull;
     ///
     /// let arena = Arena::new();
     ///

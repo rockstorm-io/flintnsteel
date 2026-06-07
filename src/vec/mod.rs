@@ -1690,7 +1690,7 @@ impl<'a, T> Vec<'a, T> {
     /// struct ZeroSized;
     ///
     /// fn main() {
-    ///     assert_eq!(std::mem::size_of::<ZeroSized>(), 0);
+    ///     assert_eq!(core::mem::size_of::<ZeroSized>(), 0);
     ///
     ///     let arena = Arena::new();
     ///     let v = vec_in![&arena; ZeroSized; 0];
