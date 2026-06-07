@@ -1,0 +1,47 @@
+name: "CI"
+
+on:
+  merge_group:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: Check
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v6
+
+      - name: Install stable toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Cargo check
+        run: cargo check --workspace --all-targets --features vec
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v6
+
+      - name: Install stable toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Cargo check
+        run: cargo test --workspace --features vec
