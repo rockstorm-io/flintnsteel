@@ -55,8 +55,9 @@
 //! but `std` crate can be disabled using `no_std` feature.
 //!
 //! Disabling `std` will also turn off [`ArenaPool`] and [`ArenaPoolGuard`], because they
-//! depend on [`std::sync::Mutex`]
+//! depend on [`Mutex`]
 //!
+//! [`Mutex`]: std::sync::Mutex
 //! [`Vec`]: vec::Vec
 //! [`Box`]: boxed::Box
 

@@ -202,6 +202,11 @@ impl<'a, T: ?Sized> Box<'a, T> {
     /// use flintnsteel::Arena;
     ///
     /// let arena = Arena::new();
+    /// let boxed = arena.alloc_boxed(0);
+    ///
+    /// let unboxed = boxed.unbox();
+    ///
+    /// assert_eq!(*unboxed, 0);
     /// ```
     #[inline]
     pub const fn unbox(self) -> &'a mut T {
