@@ -1,0 +1,25 @@
+[package]
+name = "flintnsteel"
+description = "An arena allocator"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/rockstorm-io/flintnsteel"
+categories = ["memory-management"]
+keywords = ["allocator", "arena"]
+
+[lib]
+
+[dependencies]
+allocator-api2 = { version = "0.4.0", optional = true }
+
+[features]
+default = ["vec"]
+allocator-api2 = ["dep:allocator-api2"]
+allocator_api = []
+no_std = []
+vec = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs", "-D", "warnings"]
