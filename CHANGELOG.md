@@ -4,6 +4,8 @@ Fix UB in `Vec::dealloc`
 
 Add `Box::dealloc` method
 
+Specify 'a lifetime for `Box` deref implementations
+
 Improve documentation
 
 # 0.1.2

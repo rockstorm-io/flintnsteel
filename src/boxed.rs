@@ -269,7 +269,10 @@ impl<'a, T: ?Sized> Box<'a, T> {
     /// [`Box`] owns its allocation, and the `'a` lifetime blocks arena
     /// from dropping itself until `this` have been dropped
     #[inline]
-    pub const fn pin(this: Self) -> Pin<Box<'a, T>> {
+    pub const fn pin(this: Self) -> Pin<Box<'a, T>>
+    where
+        T: 'a,
+    {
         unsafe {
             // Safety: `Box<T>` owns its value, and arena guarantees it to live for an entire
             // duration of 'a lifetime
@@ -344,21 +347,21 @@ impl<'a, T: ?Sized + 'a> DerefMut for Box<'a, T> {
 impl<'a, T: ?Sized + 'a> AsRef<T> for Box<'a, T> {
     #[inline]
     fn as_ref(&self) -> &'a T {
-        self.deref()
+        unsafe { self.ptr.as_ref() }
     }
 }
 
 impl<'a, T: ?Sized + 'a> AsMut<T> for Box<'a, T> {
     #[inline]
     fn as_mut(&mut self) -> &'a mut T {
-        self.deref_mut()
+        unsafe { self.ptr.as_mut() }
     }
 }
 
 impl<'a, T: ?Sized + 'a> Borrow<T> for Box<'a, T> {
     #[inline]
     fn borrow(&self) -> &'a T {
-        self.deref()
+        unsafe { self.ptr.as_ref() }
     }
 }
 
