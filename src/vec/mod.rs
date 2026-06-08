@@ -676,7 +676,7 @@ impl<'a, T> Vec<'a, T> {
 
     /// Reserves the minimum capacity for at least `additional` more elements.
     ///
-    /// Unlike [`reserve`], this will not deliberately over-allocate to speculatively
+    /// Unlike `reserve`, this will not deliberately over-allocate to speculatively
     /// avoid frequent allocations. After calling `reserve_exact`, capacity will be
     /// greater than or equal to`self.len() + additional`.
     ///
@@ -706,7 +706,7 @@ impl<'a, T> Vec<'a, T> {
 
     /// Attempts to reserve the minimum capacity for at least `additional` elements.
     ///
-    /// Unlike [`try_reserve`], this will not deliberately over-allocate to speculatively
+    /// Unlike `try_reserve`, this will not deliberately over-allocate to speculatively
     /// avoid frequent allocations. After calling `try_reserve_exact`, capacity will be greater
     /// than or equal to `self.len() + additional` if it returns `Ok(())`.
     ///

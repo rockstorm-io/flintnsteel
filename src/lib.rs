@@ -25,8 +25,8 @@
 //! Its API comes in three variants, called allocation flavors. Regular allocation
 //! simply returns a `&mut T`, types which implement [`Drop`] trait must be dropped
 //! manually. On the other hand, boxed allocations return [`Box`], which will drop the
-//! value when it gets dropped. Reference counted allocations are the same
-//! as having a `&T` which can outlive the arena.
+//! value when it gets dropped. Reference counted allocations return [`Rc`] which is
+//! identical to having a `&T` that can outlive the arena.
 //!
 //! Allocation flavors are the main way of accomplishing the compromise, where
 //! more high-level features doesn't penetrate simpler ones. See [`Arena`]

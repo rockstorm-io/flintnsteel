@@ -11,7 +11,7 @@ use crate::ChunkFooter;
 
 /// An immutable reference counted autonomous allocation.
 ///
-/// This struct is a wrapper of top of some arena allocation enforcing allocation-level
+/// This struct is a wrapper of top of some arena allocation enforcing
 /// chunk-level reference counting. The reference counting blocks deallocation of the chunk
 /// where allocation lives, making the wrapper unbound from arena's lifetime.
 ///
