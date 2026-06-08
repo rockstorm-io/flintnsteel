@@ -475,21 +475,18 @@ impl<'a, T> Vec<'a, T> {
     /// vec.dealloc();
     /// ```
     #[inline]
-    pub fn dealloc(mut self) {
-        let to_drop = slice_from_raw_parts_mut(self.as_mut_ptr(), self.len());
+    pub fn dealloc(self) {
         let layout = self.calculate_layout();
-        
+        let ptr = self.ptr.cast::<u8>();
+        let arena = self.arena;
+
+        drop(self);
+
         unsafe {
             // Safety: `Vec` guarantees to have a valid pointer for non-zero length.
             // If the pointer is valid, UB will not be triggered because the length
             // is zero, therefore the cursor won't be incremented
-            self.arena.dealloc(self.ptr.cast::<u8>(), layout);
-
-            forget(self);
-
-            // Safety: we called `forget(self)` so `Drop::drop` won't be called. All elements
-            // of `to_drop` are initialized because `Vec` guarantees that
-            drop_in_place(to_drop);
+            arena.dealloc(ptr, layout);
         }
     }
 

@@ -5,6 +5,7 @@ use core::hash::{Hash, Hasher};
 use core::marker::PhantomData;
 use core::mem::MaybeUninit;
 use core::borrow::Borrow;
+use core::alloc::Layout;
 use core::cmp::Ordering;
 use core::mem::forget;
 use core::pin::Pin;
@@ -219,7 +220,50 @@ impl<'a, T: ?Sized> Box<'a, T> {
             ptr.as_mut()
         }
     }
-    
+
+    /// Drops this [`Box`] and deallocates its memory inside `arena`.
+    ///
+    /// If the allocation is not the last in `arena` or the arena isn't the one
+    /// where the allocation lives, this will have no effect.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use flintnsteel::Arena;
+    ///
+    /// let arena = Arena::new();
+    /// let boxed = arena.alloc_boxed(0);
+    ///
+    /// boxed.dealloc_in(&arena);
+    /// ```
+    ///
+    /// An example where calling [`Box::dealloc_in`] will have no effect:
+    ///
+    /// ```
+    /// use flintnsteel::Arena;
+    ///
+    /// let arena = Arena::new();
+    /// let boxed = arena.alloc_boxed(0);
+    ///
+    /// // This has no effect because the allocation is stored inside other arena
+    /// boxed.dealloc_in(&Arena::new());
+    /// ```
+    #[inline]
+    pub fn dealloc_in(self, arena: &Arena) {
+        let ptr = self.ptr.cast::<u8>();
+        let layout = Layout::for_value(&*self);
+
+        drop(self);
+
+        unsafe {
+            // Safety: this is safe because `Arena::dealloc` checks the pointer
+            // to be the last in the arena. Our pointer and the cursor pointer
+            // of the arena's chunk are unique, so if `arena` is not the actual
+            // origin of this `Box`, the check will simply return early
+            arena.dealloc(ptr, layout);
+        }
+    }
+
     /// Pins `this`, creating a new [`Pin`].
     ///
     /// [`Box`] owns its allocation, and the `'a` lifetime blocks arena
