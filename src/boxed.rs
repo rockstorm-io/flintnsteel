@@ -325,39 +325,39 @@ impl<'a, T> Box<'a, [MaybeUninit<T>]> {
     }
 }
 
-impl<T: ?Sized> Deref for Box<'_, T> {
+impl<'a, T: ?Sized> Deref for Box<'a, T> {
     type Target = T;
 
     #[inline]
-    fn deref(&self) -> &Self::Target {
+    fn deref(&self) -> &'a Self::Target {
         unsafe { self.ptr.as_ref() }
     }
 }
 
-impl<T: ?Sized> DerefMut for Box<'_, T> {
+impl<'a, T: ?Sized> DerefMut for Box<'a, T> {
     #[inline]
-    fn deref_mut(&mut self) -> &mut Self::Target {
+    fn deref_mut(&mut self) -> &'a mut Self::Target {
         unsafe { self.ptr.as_mut() }
     }
 }
 
-impl<T: ?Sized> AsRef<T> for Box<'_, T> {
+impl<'a, T: ?Sized> AsRef<T> for Box<'a, T> {
     #[inline]
-    fn as_ref(&self) -> &T {
+    fn as_ref(&self) -> &'a T {
         self.deref()
     }
 }
 
-impl<T: ?Sized> AsMut<T> for Box<'_, T> {
+impl<'a, T: ?Sized> AsMut<T> for Box<'a, T> {
     #[inline]
-    fn as_mut(&mut self) -> &mut T {
+    fn as_mut(&mut self) -> &'a mut T {
         self.deref_mut()
     }
 }
 
-impl<T: ?Sized> Borrow<T> for Box<'_, T> {
+impl<'a, T: ?Sized> Borrow<T> for Box<'a, T> {
     #[inline]
-    fn borrow(&self) -> &T {
+    fn borrow(&self) -> &'a T {
         self.deref()
     }
 }
