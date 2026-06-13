@@ -1,16 +1,19 @@
-use core::ptr::{slice_from_raw_parts_mut, drop_in_place, NonNull};
+use core::ptr::{NonNull, drop_in_place, slice_from_raw_parts_mut};
+use core::borrow::{Borrow, BorrowMut};
 use core::ops::{Deref, DerefMut};
 use core::fmt::{Debug, Display};
 use core::hash::{Hash, Hasher};
 use core::marker::PhantomData;
 use core::mem::MaybeUninit;
-use core::borrow::Borrow;
-use core::alloc::Layout;
 use core::cmp::Ordering;
+use core::alloc::Layout;
 use core::mem::forget;
 use core::pin::Pin;
 
 use crate::Arena;
+
+// TODO: How to implement From<Box<'a, T>> for &'a mut T? We either can not implement \
+// TODO: Into<&'a mut T> due to conficting implementation, or the generic isn't covered by another type
 
 /// A trait that allows explicit creation of duplicate value inside an [`Arena`].
 ///
@@ -192,6 +195,22 @@ impl<'a, T: ?Sized> Box<'a, T> {
         }
     }
 
+    /// Creates a new [`Box`] from a mutable reference.
+    ///
+    /// The reference is not strictly supposed to point to an allocation inside
+    /// an [`Arena`]. If you use this method with a reference to, for example,
+    /// stack variable, the box will just be wrapper calling [`Drop`] implementation
+    /// of that variable
+    #[inline]
+    pub const fn from_mut(reference: &'a mut T) -> Self {
+        unsafe {
+            // Safety: the reference we got is guaranteed by the borrow checker to be unique,
+            // therefore we can safely create a `Box` from it and the `'a` lifetime will
+            // prevent any coexisting borrows
+            Self::from_raw(NonNull::from_mut(reference))
+        }
+    }
+
     /// Unbox the value of this [`Box`], consuming it.
     ///
     /// Creating boxed allocation and unboxing it is basically the same as
@@ -362,6 +381,34 @@ impl<'a, T: ?Sized + 'a> Borrow<T> for Box<'a, T> {
     #[inline]
     fn borrow(&self) -> &'a T {
         unsafe { self.ptr.as_ref() }
+    }
+}
+
+impl<'a, T: ?Sized + 'a> BorrowMut<T> for Box<'a, T> {
+    #[inline]
+    fn borrow_mut(&mut self) -> &mut T {
+        unsafe { self.ptr.as_mut() }
+    }
+}
+
+impl<'a, T: ?Sized> From<&'a mut T> for Box<'a, T> {
+    #[inline]
+    fn from(value: &'a mut T) -> Self {
+        Box::from_mut(value)
+    }
+}
+
+impl<'a, T> From<Box<'a, [T]>> for &'a mut [T] {
+    #[inline]
+    fn from(value: Box<'a, [T]>) -> Self {
+        value.unbox()
+    }
+}
+
+impl<'a> From<Box<'a, str>> for &'a mut str {
+    #[inline]
+    fn from(value: Box<'a, str>) -> Self {
+        value.unbox()
     }
 }
 

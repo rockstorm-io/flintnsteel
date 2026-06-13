@@ -15,7 +15,7 @@ use crate::vec::into_iter::IntoIter;
 use crate::vec::splice::Splice;
 use crate::vec::drain::Drain;
 use crate::{Arena, panic_alloc};
-use crate::boxed::Box;
+use crate::boxed::{Box, CloneIn};
 
 pub mod into_iter;
 pub mod splice;
@@ -2287,6 +2287,20 @@ impl<'a, T> AsMut<[T]> for Vec<'a, T> {
     #[inline]
     fn as_mut(&mut self) -> &mut [T] {
         self.as_mut_slice()
+    }
+}
+
+impl<'a, T> From<Vec<'a, T>> for &'a mut [T] {
+    #[inline]
+    fn from(value: Vec<'a, T>) -> Self {
+        value.into_slice()
+    }
+}
+
+impl<'a, T> From<Vec<'a, T>> for Box<'a, [T]> {
+    #[inline]
+    fn from(value: Vec<'a, T>) -> Self {
+        value.into_boxed_slice()
     }
 }
 
