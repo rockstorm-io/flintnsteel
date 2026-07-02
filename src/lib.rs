@@ -892,12 +892,12 @@ impl Arena {
     /// let first = arena.alloc(1);
     /// let second = arena.alloc(2);
     ///
-    /// assert_eq!(arena.is_last_allocation(from_mut(first)), false);
-    /// assert_eq!(arena.is_last_allocation(from_mut(second)), true);
+    /// assert_eq!(arena.is_last_allocation(first as *mut i32 as *const u8), false);
+    /// assert_eq!(arena.is_last_allocation(second as *mut i32 as *const u8), true);
     /// ```
     #[inline]
-    pub fn is_last_allocation(&self, ptr: *mut u8) -> bool {
-        self.alloc.cursor_ptr.get().as_ptr() == ptr
+    pub fn is_last_allocation(&self, ptr: *const u8) -> bool {
+        core::ptr::eq(self.alloc.cursor_ptr.get().as_ptr(), ptr)
     }
 
     // Allocation methods
