@@ -351,35 +351,35 @@ impl<'a, T: ?Sized + 'a> Deref for Box<'a, T> {
     type Target = T;
 
     #[inline]
-    fn deref(&self) -> &'a Self::Target {
+    fn deref(&self) -> &Self::Target {
         unsafe { self.ptr.as_ref() }
     }
 }
 
 impl<'a, T: ?Sized + 'a> DerefMut for Box<'a, T> {
     #[inline]
-    fn deref_mut(&mut self) -> &'a mut Self::Target {
+    fn deref_mut(&mut self) -> &mut Self::Target {
         unsafe { self.ptr.as_mut() }
     }
 }
 
 impl<'a, T: ?Sized + 'a> AsRef<T> for Box<'a, T> {
     #[inline]
-    fn as_ref(&self) -> &'a T {
+    fn as_ref(&self) -> &T {
         unsafe { self.ptr.as_ref() }
     }
 }
 
 impl<'a, T: ?Sized + 'a> AsMut<T> for Box<'a, T> {
     #[inline]
-    fn as_mut(&mut self) -> &'a mut T {
+    fn as_mut(&mut self) -> &mut T {
         unsafe { self.ptr.as_mut() }
     }
 }
 
 impl<'a, T: ?Sized + 'a> Borrow<T> for Box<'a, T> {
     #[inline]
-    fn borrow(&self) -> &'a T {
+    fn borrow(&self) -> &T {
         unsafe { self.ptr.as_ref() }
     }
 }

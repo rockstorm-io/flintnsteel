@@ -15,7 +15,7 @@ use crate::vec::into_iter::IntoIter;
 use crate::vec::splice::Splice;
 use crate::vec::drain::Drain;
 use crate::{Arena, panic_alloc};
-use crate::boxed::{Box, CloneIn};
+use crate::boxed::Box;
 
 pub mod into_iter;
 pub mod splice;
